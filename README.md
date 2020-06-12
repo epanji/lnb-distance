@@ -6,7 +6,12 @@ Author: _Panji Kusuma <epanji@gmail.com>_
 
 ## Usages
 
+Assume users already have lisp implementation and [Quicklisp](https://www.quicklisp.org/beta/) on their computer.
+Place this project in folder local-projects and follow this demo.
+
 ![Demo](demo.gif)
+
+Current demo run on [SBCL](http://www.sbcl.org/).
 
 Find satellite
 
@@ -48,10 +53,6 @@ This table start from WEST to EAST with focus on "Telkom 4".
 
 #<PARABOLA diameter 213.36 cm, depth 30.48 cm {1003646A23}>
 ```
-
-
-
-
 
 List of satellites
 
@@ -101,6 +102,80 @@ LNBD> *satellites*
  #<SATELLITE "Intelsat 19" 166.0° {10030E25E3}>
  #<SATELLITE "Intelsat 8" 169.0° {10030E2673}>
  #<SATELLITE "Eutelsat 172A" 172.0° {10030E2713}>)
+```
+
+## Build executable
+
+Build executable for command line required [ECL](https://common-lisp.net/project/ecl/).
+Type the following lines from a lisp prompt:
+
+``` common-lisp
+(compile-file "package.lisp" :output-file "pkg.o" :system-p t)
+(compile-file "lnbd.lisp" :output-file "lnbd.o" :system-p t)
+(compile-file "cmdline.lisp" :output-file "cmdline.o" :system-p t)
+(c::build-program "lnb-parabola" :lisp-files '("pkg.o" "lnbd.o" "cmdline.o"))
+```
+
+Command line:
+
+``` bash
+$ ./lnb-parabola -h
+
+lnb-parabola [-h | -? | --help]
+
+    Display help message about command line arguments.
+
+lnb-parabola [--find-satellite orbit-or-name]
+
+    Find satellite from orbit or name.
+
+lnb-parabola [--ft-cm feet]
+
+    Convert feet to centimeter.
+
+lnb-parabola diameter depth focus satellites*
+
+    Calculate LNBs distances for parabola.
+      - Diameter and Depth is number in centimeter.
+      - Focus and Satellite is orbit degree or satellite name.
+    Satellites could be add one or mores.
+
+lnb-parabola [--list-satellites]
+
+    Display list of satellites.
+```
+
+``` bash
+$ ./lnb-parabola --find-satellite "palapa d"
+#<satellite "Palapa D" 113.0° 0x26de9c0>
+```
+
+``` bash
+$ ./lnb-parabola --find-satellite 113
+#<satellite "Palapa D" 113.0° 0x25ba9c0>
+```
+
+``` bash
+$ ./lnb-parabola --ft-cm 7
+213.36
+```
+
+``` bash
+$ ./lnb-parabola 213.36 30.48 "telkom 4" "asiasat 5" 113 'asiasat 7'
+
+LNB calculation for parabola with diameter 213.36 cm and depth 30.48 cm.
+
+    Focal length    93.35 cm
+    Radius          201.93 cm
+
+This table start from WEST to EAST with focus on "Telkom 4".
+
+    From         To           Cm
+    -----------  -----------  -----
+    Palapa D     Telkom 4     9.10
+    Telkom 4     Telkom 4     0.00
+    Telkom 4     AsiaSat 7    5.12
+    Telkom 4     AsiaSat 5    14.59
 ```
 
 ## license
