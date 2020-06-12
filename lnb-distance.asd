@@ -3,8 +3,10 @@
 (asdf:defsystem #:lnb-distance
   :description "LNB-DISTANCE is system to calculate multi LNB distances from center in PARABOLA."
   :author "Panji Kusuma <epanji@gmail.com>"
-  :license  "Public Domain"
-  :version "0.0.1"
+  :license "Public Domain"
+  :version "0.0.2"
   :serial t
   :components ((:file "package")
-               (:file "lnbd")))
+               (:file "lnbd")
+               #+ecl
+               (:file "cmdline")))
