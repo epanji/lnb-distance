@@ -38,41 +38,31 @@ lnb-parabola [--list-satellites]
 
 ")
 
+(defun validate-arg (string)
+  (if (digit-char-p (elt string 0))
+      (read-from-string string)
+      string))
+
 (defconstant +lnb-parabola-rules+
-  '(("--help" 0
-     (progn (princ ext:*help-message* *standard-output*)
-            (ext:quit 0)))
-    ("-h" 0
-     (progn (princ ext:*help-message* *standard-output*)
-            (ext:quit 0)))
-    ("-?" 0
+  '((("-h" "-?" "--help") 0
      (progn (princ ext:*help-message* *standard-output*)
             (ext:quit 0)))
     ("--list-satellites" 0
-     (progn (mapc (lambda (sat)
-                    (princ sat *standard-output*)
+     (progn (mapc (lambda (satellite)
+                    (princ satellite *standard-output*)
                     (terpri *standard-output*))
                   lnbd:*satellites*)
             (ext:quit 0)))
     ("--find-satellite" 1
-     (flet ((valid-argument (s)
-              (if (digit-char-p (elt s 0))
-                  (read-from-string s)
-                  s)))
-       (princ (lnbd:find-satellite (valid-argument 1)) *standard-output*)
-       (terpri *standard-output*)
-       (ext:quit 0)))
+     (progn (princ (lnbd:find-satellite (validate-arg 1)) *standard-output*)
+            (terpri *standard-output*)
+            (ext:quit 0)))
     ("--ft-cm" 1
      (progn (princ (lnbd:ft->cm (read-from-string 1)) *standard-output*)
             (terpri *standard-output*)
             (ext:quit 0)))
     ("*DEFAULT*" 1
-     (flet ((valid-argument (s)
-              (if (digit-char-p (elt s 0))
-                  (read-from-string s)
-                  s)))
-       (apply 'lnbd:make-parabola (mapcar #'valid-argument 1)))
-     :stop)))
+     (progn (apply 'lnbd:make-parabola (mapcar #'validate-arg 1))) :stop)))
 
 (let ((ext:*lisp-init-file-list* NIL)) ; No initialization files
   (handler-case (ext:process-command-args :rules +lnb-parabola-rules+)
