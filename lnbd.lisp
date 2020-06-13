@@ -119,8 +119,8 @@
             (parabola-diameter self) (parabola-depth self))))
 
 (defun make-parabola (diameter depth focus-satellite &rest satellites)
-  (declare (number diameter depth))
-  (when (null satellites) (error "Satellites can not be NULL"))
+  (declare (number diameter depth)
+           (type (not null) focus-satellite satellites))
   (setf focus-satellite (find-satellite focus-satellite))
   (setf satellites (mapcar 'find-satellite satellites))
   (let ((parabola (make-instance 'parabola :diameter diameter
