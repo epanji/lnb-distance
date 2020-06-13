@@ -7,6 +7,4 @@
   :version "0.0.2"
   :serial t
   :components ((:file "package")
-               (:file "lnbd")
-               #+ecl
-               (:file "cmdline")))
+               (:file "lnbd")))
