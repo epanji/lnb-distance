@@ -6,12 +6,12 @@ Author: _Panji Kusuma <epanji@gmail.com>_
 
 ## Usages
 
-Assume users already have lisp implementation and [Quicklisp](https://www.quicklisp.org/beta/) on their computer.
-Place this project in folder local-projects and follow this demo.
+Assuming the user already have [Common Lisp Implementation](https://common-lisp.net/implementations) and [Quicklisp](https://www.quicklisp.org/beta/) on their computer.
+Place this project in folder ```local-projects``` and follow the demo below.
 
 ![Demo](demo.gif)
 
-Current demo run on [SBCL](http://www.sbcl.org/).
+Common Lisp Implementation used in the demo above is [SBCL](http://www.sbcl.org/).
 
 Find satellite
 
@@ -106,7 +106,7 @@ LNBD> *satellites*
 
 ## Build executable
 
-Build executable for command line required [ECL](https://common-lisp.net/project/ecl/).
+One of several ways to build executable for command line is using [ECL](https://common-lisp.net/project/ecl/).
 Type the following lines from a lisp prompt:
 
 ``` common-lisp
@@ -115,6 +115,7 @@ Type the following lines from a lisp prompt:
 (compile-file "cmdline.lisp" :output-file "cmdline.o" :system-p t)
 (c::build-program "lnb-parabola" :lisp-files '("pkg.o" "lnbd.o" "cmdline.o"))
 ```
+Note: _Executable will depend on shared library ```libecl.so*```. It will try to load the library according to LD_LIBRARY_PATH._
 
 Command line:
 
